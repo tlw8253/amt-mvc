@@ -1,0 +1,86 @@
+<configuration>
+
+	<appender name="myConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{dd MMM yyyy - HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="myFileAppender" class="ch.qos.logback.core.FileAppender">
+		<file>mylogfile.log</file>
+		<append>true</append>
+		<encoder>
+			<pattern>%d{dd MMM yyyy - HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Found the logging solution I was looking for via Google search then at: 
+		https://stackoverflow.com/questions/11121846/how-to-configure-logback-for-package -->
+
+	<!-- Turn on specific debugging levels for our program packages -->
+	<!--  When using the notation package.application.* like in the Javalin setting it did not work
+			so use without the .* and it should work the way we want. -->
+	<logger name="com.amt.app" level="TRACE" />
+	<logger name="com.amt.config" level="TRACE" />
+	<logger name="com.amt.controller" level="TRACE" />
+	<logger name="com.amt.dao" level="TRACE" />
+	<logger name="com.amt.dto" level="TRACE" />
+	<logger name="com.amt.execption" level="TRACE" />
+	<logger name="com.amt.model" level="TRACE" />
+	<logger name="com.amt.service" level="TRACE" />
+	<logger name="com.amt.util" level="INFO" />
+	<logger name="com.amt.controller.integration" level="TRACE" />
+	<logger name="com.amt.controller.unit" level="TRACE" />
+	<logger name="com.amt.daotests" level="TRACE" />
+	
+	<!--  take off the include all notation: Javalin.*
+	
+	<logger name="io.javalin.Javalin.*" level="INFO" /> 
+	
+	TESTED the assumption with setting the Javalin level to ERROR and did 
+	not see the usual INFO level messages.  However we do want to see INFO from Javalin	
+	<logger name="io.javalin.Javalin" level="ERROR" />  	
+	<logger name="io.javalin.Javalin" level="INFO" />-->
+	
+	
+
+	<root level="INFO">
+		<!-- We need to configure what appenders our logger should be using -->
+		<appender-ref ref="myConsoleAppender" />
+		<appender-ref ref="myFileAppender" />
+	</root>
+	
+	
+</configuration>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
