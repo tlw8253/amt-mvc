@@ -2,6 +2,11 @@ package com.amt.exception;
 
 public class ShipNotFoundException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public ShipNotFoundException() {
 	}
 

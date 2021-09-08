@@ -1,6 +1,8 @@
 package com.amt.dto;
 
 import com.amt.app.Constants;
+import com.amt.model.EmployeeRole;
+import com.amt.model.UserType;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,7 +20,7 @@ public class UserDTO implements Constants {
 	private String firstName = "";
 	private String lastName = "";
 	private String email = "";	
-	private String userType = "";
-	private String employeeRole = "";
+	private UserType userType;
+	private EmployeeRole employeeRole;
 
 }

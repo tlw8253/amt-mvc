@@ -24,9 +24,18 @@ public class TestController {
 	}
 
 	/*
+http://localhost:8080/amt-mvc/amt_login
+http://localhost:8080/amt-mvc/amt_logout
+http://localhost:8080/amt-mvc/amt_current_user
+
 http://localhost:8080/amt-mvc/hello
 http://localhost:8080/amt-mvc/amt_user/tw8253
 http://localhost:8080/amt-mvc/amt_customer
+http://localhost:8080/amt-mvc/amt_user_type/CUSTOMER
+http://localhost:8080/amt-mvc/amt_empl_role/CUSTOMER
+
+
+
 http://localhost:4201/amt-mvc/amt_user/tw8253
 	 */
 	

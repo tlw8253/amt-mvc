@@ -7,11 +7,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @EqualsAndHashCode @NoArgsConstructor @ToString
-public class MessageDto {
+public class MessageDTO {
 
 	private String message;
 	
-	public MessageDto(String message) {
+	public MessageDTO(String message) {
 		this.message = message;
 	}
 	

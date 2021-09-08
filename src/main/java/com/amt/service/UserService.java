@@ -6,13 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.amt.app.Constants;
-import com.amt.app.Constants.enumUserType;
 import com.amt.dao.UserDAO;
-import com.amt.dao.UserTypeDAO;
 import com.amt.dto.AddCustomerDTO;
 import com.amt.dto.UserDTO;
 import com.amt.exception.BadParameterException;
 import com.amt.exception.DatabaseException;
+import com.amt.model.EmployeeRole;
 import com.amt.model.User;
 import com.amt.model.UserType;
 import com.amt.util.PasswordUtil;
@@ -26,26 +25,73 @@ public class UserService implements Constants {
 
 	@Autowired
 	public UserService(UserDAO objUserDAO) {
+		String sMethod = csCRT + "UserService(): ";
+		objLogger.trace(sMethod + "Construtor Entered.");
+		
 		this.objUserDAO = objUserDAO;
 	}
+
 
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
 	public User getUserByUsername(String sUsername) throws DatabaseException {
 		String sMethod = csCRT + "getUserByUsername(): ";
-		objLogger.trace(csCR + sMethod + "Entered: sUsername [" + sUsername + "]");
+		objLogger.trace(sMethod + "Entered: sUsername [" + sUsername + "]");
 
-		User objUser = objUserDAO.getByName(sUsername);
+		//objUserDAO = new UserDAO();
+		try {
+			User objUser = objUserDAO.getUserByUsername(sUsername);
+			return objUser;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csCR + "Exception: [" + e.getMessage() + "]");
+			throw new DatabaseException(csMsgDB_ErrorGettingUserByUsername);
+		}
 		
-		return objUser;
 	}
+
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	public UserType getUserTypeByName(String sName) throws DatabaseException {
+		String sMethod = csCRT + "getUserTypeByName(): ";
+		objLogger.trace(sMethod + "Entered: sUsername [" + sName + "]");
+		
 	
+		try {
+			objLogger.debug(sMethod + "calling objUserDAO.getByUserTypeName(" + sName + ")");
+			UserType objUserType = objUserDAO.getUserTypeByName(sName);
+			objLogger.debug(sMethod + csCR + "return user type: [" + objUserType.toString() + "]");
+			return objUserType;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csCR + csMsgDB_ErrorGettingUserTypeByName + " : [" + sName + "]");
+			objLogger.warn(sMethod + "Exception: [" + e.getMessage() + "]");
+			throw new DatabaseException(csMsgDB_ErrorGettingUserTypeByName);
+		}		
+	}
+
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	public EmployeeRole getEmployeeRoleByName(String sName) throws DatabaseException {
+		String sMethod = csCRT + "getEmployeeRoleByName(): ";
+		objLogger.trace(sMethod + "Entered: sUsername [" + sName + "]");
+		
+		try {
+			objLogger.debug(sMethod + "calling objUserDAO.getByUserTypeName(" + sName + ")");
+			EmployeeRole objEmployeeRole = objUserDAO.getEmployeeRoleByName(sName);
+			objLogger.debug(sMethod + csCR + "return user type: [" + objEmployeeRole.toString() + "]");
+			return objEmployeeRole;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csCR + csMsgDB_ErrorGettingEmployeeRoleByName + " : [" + sName + "]");
+			objLogger.warn(sMethod + "Exception: [" + e.getMessage() + "]");
+			throw new DatabaseException(csMsgDB_ErrorGettingEmployeeRoleByName);
+		}		
+	}
+
 	
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
 	public User addCustomer(AddCustomerDTO objAddDTO) throws DatabaseException, BadParameterException {
 		String sMethod = csCRT + "addCustomer(): ";
-		objLogger.trace(csCR + sMethod + "Entered: objAddDTO: [" + objAddDTO.toString() + "]");
+		objLogger.trace(sMethod + "Entered: objAddDTO: [" + objAddDTO.toString() + "]");
 
 		if (isValidAddCustomerDTO(objAddDTO)) {
 			try {
@@ -66,23 +112,27 @@ public class UserService implements Constants {
 				objUserDTO.setEmail(objAddDTO.getEmail());
 
 				
-				objUserDTO.setUserType(csarUserType[enumUserType.CUSTOMER.pos]);
-				objUserDTO.setEmployeeRole(csarEmployeeRoles[enumUserEmployee.CUSTOMER.pos]);
+				
+				objLogger.debug(sMethod + "Calling local User Service to get customer User Type.");
+				UserType objUserType = getUserTypeByName(csarUserType[enumUserType.CUSTOMER.pos]);
+				objLogger.debug(sMethod + csCR +"objUserType: [" + objUserType + "]");
+				objUserDTO.setUserType(objUserType);
+				
+				objLogger.debug(sMethod + "Calling local User Service to get customer Employee Role.");
+				EmployeeRole objEmployeeRole = getEmployeeRoleByName(csarEmployeeRoles[enumUserEmployee.CUSTOMER.pos]);
+				objLogger.debug(sMethod + csCR +"objUserType: [" + objUserType + "]");
+				objUserDTO.setEmployeeRole(objEmployeeRole);
 
-				objLogger.debug(sMethod + "Calling DAO to get customer User Type.");
-				UserTypeDAO objUserTypeDAO = new UserTypeDAO();
-				UserType objUserType = objUserTypeDAO.getByName(csarUserType[enumUserType.CUSTOMER.pos]);
-				objLogger.debug(sMethod + "objUserType: [" + objUserType + "]");
 
 				
 				objLogger.debug(sMethod + "calling addNew with objUserDTO: [" + objUserDTO.toString() + "]");	
-//				User objUser = objUserDAO.addNew(objUserDTO);
-//				objLogger.debug(sMethod + "objUser: [" + objUser.toString() + "]");
-				return null; //return objUser;
+				User objUser = objUserDAO.addNewUser(objUserDTO);
+				objLogger.debug(sMethod + csCR + "user object returned from DAO call objUser: [" + objUser.toString() + "]");
+				return objUser;
 
 			} catch (Exception e) {// not sure what exception hibernate throws but not SQLException
-				objLogger.error(sMethod + "Exception adding User record with username: [" + objAddDTO.getUsername()
-						+ "] Exception: [" + e.toString() + "] [" + e.getMessage() + "]");
+				objLogger.error(sMethod + csCR + "Exception adding User record with username: [" + objAddDTO.getUsername()	+ "]");
+				objLogger.warn(sMethod + "Exception: [" + e.toString() + "] [" + e.getMessage() + "]");
 				throw new DatabaseException(csMsgDB_ErrorAddingUser);
 			}
 
@@ -129,6 +179,7 @@ public class UserService implements Constants {
 	public static boolean isValidUsername(String sUsername) {
 		boolean bValid = true;
 		
+		sUsername = sUsername.trim();		
 		bValid = Validate.isAlphaNumeric(sUsername) 
 				&& sUsername.length() >= ciUsernameMinLength 
 				&& sUsername.length() <= ciUsernameMaxLength;
@@ -138,6 +189,7 @@ public class UserService implements Constants {
 
 	public static boolean isValidPassword(String sPassword) {
 		
+		sPassword = sPassword.trim();
 		return Validate.isPasswordFormat(sPassword, ciUserMinPassword, ciUserMaxPassword);		
 	}
 

@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.amt.controller.ShipController;
-import com.amt.dto.MessageDto;
+import com.amt.dto.MessageDTO;
 import com.amt.exception.BadParameterException;
 import com.amt.model.User;
 import com.amt.service.ShipService;

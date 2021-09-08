@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.amt.dto.AddShipDTO;
-import com.amt.dto.MessageDto;
+import com.amt.dto.MessageDTO;
 import com.amt.exception.BadParameterException;
 import com.amt.exception.ShipNotFoundException;
 import com.amt.model.User;
