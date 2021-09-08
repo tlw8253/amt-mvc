@@ -26,6 +26,7 @@ public class TestController {
 	/*
 http://localhost:8080/amt-mvc/hello
 http://localhost:8080/amt-mvc/amt_user/tw8253
+http://localhost:8080/amt-mvc/amt_customer
 http://localhost:4201/amt-mvc/amt_user/tw8253
 	 */
 	
