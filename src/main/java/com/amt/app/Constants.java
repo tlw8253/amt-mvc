@@ -335,6 +335,8 @@ public interface Constants {
 	String csMsgDB_ErrorGettingUserTypeByName = "Error with database when getting User Type by name.";
 	String csMsgDB_ErrorGettingEmployeeRoleByName = "Error with database when getting Employee Role by name.";
 	String csMsgDB_ErrorGettingAddressTypeByName = "Error with database when getting Address Type by name.";
+	String csMsgDB_ErrorGettingPhoneNumberTypeByName = "Error with database when getting Phone Number Type by name.";
+	String csMsgDB_ErrorGettingCatalogItemByName = "Error with database when getting Catalog Item by name.";
 	String csMsgDB_ErrorAddingUser = "Database error when adding a new user.";
 	String csMsgDB_ErrorAddingAddress = "Database error when adding a new address.";
 	String csMsgDB_ErrorAddingPhoneNumber = "Error with database when adding Phone Number.";
@@ -342,6 +344,7 @@ public interface Constants {
 	String csMsgDB_ErrorGettingUserByUsername = "Database error when getting an user by username.";
 	String csMsgDB_ErrorAuthenticatingUsername = "Database error authenticating a username.";
 	String csMsgDB_ErrorAddingOrder = "Error with database when adding Order.";
+	String csMsgDB_ErrorAddingOrderedItem = "Error with database when adding an Ordered Item.";
 	String csMsgDB_ErrorGetCurrentSession = "Error getting a current database session.";
 	String csMsgDB_ErrorOpenSession = "Error opening a current database session.";
 	String csMsgDB_NotFoundGettingUserByUsername = "Record not found when getting user by username.";
@@ -374,11 +377,12 @@ public interface Constants {
 	String csMsgBadParamQueryParm = "Parmeter(s) expected. Not right number of Query Parameter(s) received.";
 
 
-	String csMsgEmployeeNotAuthorizeCatalog = "Employee is not authorize to create catalog items.";
+	String csMsgRoleNotAuthorizeCatalog = "This user's role is not authorize to create catalog items.";
 	String csMsgAutenticationFailed = "Autentication failed for username and password provided.";
 	String csMsgSessionUserNotActive = "There is no active login session.";
 	String csMsgSessionUserLoggedOut = "The session is logged out.";
 	String csMsgSessionAlreadyLoggedIn = "There is already a login session.";
+	String csMsgSessionNotForThisUser = "The session does not belong to this user.";
 
 	
 }

@@ -1,6 +1,7 @@
 package com.amt.dto;
 
 import com.amt.model.AddressType;
+import com.amt.model.PhoneNumberType;
 import com.amt.model.User;
 
 import lombok.EqualsAndHashCode;

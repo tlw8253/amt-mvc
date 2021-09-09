@@ -30,21 +30,21 @@ import com.amt.service.UserService;
 //this annotation is what the backend will use to tell the browser that the source of the JavaScript code that is sending the request
 //  to the backend is a "trusted" source
 @CrossOrigin(Constants.csCrossOriginHttp)
-public class AddressController implements Constants {
-	private Logger objLogger = LoggerFactory.getLogger(AddressController.class);
+public class OrderController implements Constants {
+	private Logger objLogger = LoggerFactory.getLogger(OrderController.class);
 
 	@Autowired //Singleton scoped bean
 	private AddressService objAddressService;
 	
-	public AddressController(AddressService objAddressService) {
+	public OrderController(AddressService objAddressService) {
 		this.objAddressService = objAddressService;
 	}
 
 
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
-	@PostMapping(path = "/amt_list_adx/{username}")
-	public ResponseEntity<Object> addAddressByList(@PathVariable("username") String username, @RequestBody AddAddressListDTO objAddAddressListDTO){
+	@PostMapping(path = "/amt_order/{username}")
+	public ResponseEntity<Object> addCustomerOrder(@PathVariable("username") String username, @RequestBody AddAddressListDTO objAddAddressListDTO){
 		String sMethod = "addAddressByList(): ";
 		objLogger.trace(sMethod + "Entered: username: [" + username + "] addUserDTO: [" + objAddAddressListDTO.toString() + "]" + csCR);
 		

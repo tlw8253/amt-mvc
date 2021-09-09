@@ -35,11 +35,25 @@ public class AddressService implements Constants {
 		this.objUserDAO = objUserDAO;
 	}
 
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	public User addAddress(String sUsername, AddAddressDTO objAddAddressDTO) throws DatabaseException, BadParameterException {
+		String sMethod = csCRT + "addAddress(): ";
+		objLogger.trace(sMethod + "Entered: objAddAddressListDTO: [" + objAddAddressDTO.toString() + "]");
+		
+		List<AddAddressDTO> lstAddAddressDTO = new ArrayList<AddAddressDTO>();
+		lstAddAddressDTO.add(objAddAddressDTO);
+		AddAddressListDTO objAddAddressListDTO = new AddAddressListDTO(lstAddAddressDTO);
+		
+		return addAddressByList(sUsername, objAddAddressListDTO);		
+
+	}
+
 
 	
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
-	public User addAddress(String sUsername, AddAddressListDTO objAddAddressListDTO) throws DatabaseException, BadParameterException {
+	public User addAddressByList(String sUsername, AddAddressListDTO objAddAddressListDTO) throws DatabaseException, BadParameterException {
 		String sMethod = csCRT + "addAddress(): ";
 		objLogger.trace(sMethod + "Entered: objAddAddressListDTO: [" + objAddAddressListDTO.toString() + "]");
 
@@ -53,7 +67,6 @@ public class AddressService implements Constants {
 			try {
 				objLogger.debug(sMethod + "Validated AddAddressListDTO: [" + objAddAddressListDTO.toString() + "]");				
 				
-				UserDTO objUserDTO = new UserDTO();
 				AddressListDTO objAddressListDTO = new AddressListDTO();
 				objAddressListDTO.setUsername(sUsername);
 				
@@ -71,7 +84,7 @@ public class AddressService implements Constants {
 					String sAddressLine2 = objAddAddressDTO.getAddressLine2();
 					String sAddressCity = objAddAddressDTO.getAddressCity();
 					String sAddressState = objAddAddressDTO.getAddressState();
-					String sAddressZipCode = objAddAddressDTO.getAddressType();
+					String sAddressZipCode = objAddAddressDTO.getAddressZipCode();
 
 					AddressDTO objAddressDTO = new AddressDTO(sAddressLine1, sAddressLine2, sAddressCity, sAddressState, sAddressZipCode);
 					objAddressDTO.setAddressType(objAddressType);
@@ -92,7 +105,7 @@ public class AddressService implements Constants {
 			} catch (Exception e) {// not sure what exception hibernate throws but not SQLException
 				objLogger.error(sMethod + csCR + "Exception adding Address List: [" + objAddAddressListDTO.toString() + "] to sUsername: [" + sUsername+ "]");
 				objLogger.warn(sMethod + "Exception: [" + e.toString() + "] [" + e.getMessage() + "]");
-				throw new DatabaseException(csMsgDB_ErrorAddingUser);
+				throw new DatabaseException(csMsgDB_ErrorAddingAddress);
 			}
 
 		} else {

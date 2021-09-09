@@ -13,10 +13,14 @@ import org.springframework.stereotype.Repository;
 import com.amt.app.Constants;
 import com.amt.dto.AddressDTO;
 import com.amt.dto.AddressListDTO;
+import com.amt.dto.PhoneNumberDTO;
+import com.amt.dto.PhoneNumberListDTO;
 import com.amt.dto.UserDTO;
 import com.amt.model.Address;
 import com.amt.model.AddressType;
 import com.amt.model.EmployeeRole;
+import com.amt.model.PhoneNumber;
+import com.amt.model.PhoneNumberType;
 import com.amt.model.User;
 import com.amt.model.UserType;
 
@@ -31,8 +35,8 @@ public class UserDAO implements Constants {
 	//
 	@Transactional
 	public User getUserByUsername(String sName) throws Exception {
-		String sMethod = csCRT + "getUserByUsername(): sUsername: [" + sName + "]";
-		objLogger.trace(sMethod + "Entered");
+		String sMethod = csCRT + "getUserByUsername(): ";
+		objLogger.trace(sMethod + "Entered: sName: [" + sName + "]");
 		User objUser = new User();
 
 		String sHQL = "FROM User u WHERE u.username = :username";
@@ -45,19 +49,19 @@ public class UserDAO implements Constants {
 			return objUser;
 		} catch (Exception e) {
 			objLogger.warn(sMethod + csMsgDB_ErrorGettingUserByUsername);
-			objLogger.warn(sMethod + "Exception: cause: [" + e.getCause() + "] class name [" + e.getClass().getName() + "] [" + e.toString() + "]");
-			objLogger.warn(sMethod + "Exception: toString: [" + e.toString() + " message: [" + e.getMessage() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
 			throw new Exception(csMsgDB_ErrorGettingUserByUsername);
 		}
-	}
-	
+	}	
 	
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
 	@Transactional
 	public User addNewUser(UserDTO objUserDTO) throws Exception {
-		String sMethod = csCRT + "addNewUser(): objUserDTO: [" + objUserDTO.toString() + "]";
-		objLogger.trace(sMethod + "Entered");
+		String sMethod = csCRT + "addNewUser(): ";
+		objLogger.trace(sMethod + "Entered: objUserDTO: [" + objUserDTO.toString() + "]");
 
 		// by this time the service layer would have validated the parameters
 		String sUsername = objUserDTO.getUsername();
@@ -73,21 +77,21 @@ public class UserDAO implements Constants {
 		objNewUser.setUserType(objUserType);
 		objNewUser.setEmployeeRole(objEmployeeRole);
 		
-		objLogger.debug(sMethod + "object being added to databae: objNewUser: [" + objNewUser + "]");
+		objLogger.debug(sMethod + "object being added to databae: objNewUser: [" + objNewUser.toString() + "]");
 		Session session = sessionFactory.getCurrentSession();
 		try {			
 			session.persist(objNewUser);
-			objLogger.debug(sMethod + "new user object returned from database add: objNewUser: [" + objNewUser + "]");
+			objLogger.debug(sMethod + "new user object returned from database add: objNewUser: [" + objNewUser.toString() + "]");
 			return objNewUser;
 		} catch (Exception e) {
 			objLogger.warn(sMethod + csMsgDB_ErrorAddingUser);
-			objLogger.warn(sMethod + "Exception: cause: [" + e.getCause() + "] class name [" + e.getClass().getName() + "] [" + e.toString() + "]");
-			objLogger.warn(sMethod + "Exception: toString: [" + e.toString() + " message: [" + e.getMessage() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
 			throw new Exception(csMsgDB_ErrorAddingUser);
 		}
 
 	}
-
 	
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
@@ -102,43 +106,19 @@ public class UserDAO implements Constants {
 		objLogger.debug(sMethod + "sHQL: [" + sHQL + "]" + " param: sName: [" + sName + "]");
 
 		objLogger.debug(sMethod + "getting sessionFactory.getCurrentSession()");
-		Session session;
-
-		try {
-			session = sessionFactory.getCurrentSession();
-			objLogger.debug(sMethod + "session.isConnected(): [" + session.isConnected() + "]");
-		} catch (Exception e) {
-			objLogger.warn(sMethod + "Exception: getting sessionFactory.getCurrentSession()");
-			/*
-			 * objLogger.warn(sMethod + "Exception: cause: [" + e.getCause() +
-			 * "] class name [" + e.getClass().getName() + "] [" + e.toString() + "]");
-			 * objLogger.warn(sMethod + "Exception: toString: [" + e.toString() +
-			 * " message: [" + e.getMessage() + "]"); throw new
-			 * Exception(csMsgDB_ErrorGetCurrentSession);
-			 */
-			objLogger.warn(sMethod + "Attempting sessionFactory.openSession()");
-			try {
-				session = sessionFactory.openSession();
-			} catch (Exception e2) {
-				objLogger.warn(sMethod + "Exception: getting sessionFactory.getCurrentSession()");
-				objLogger.warn(sMethod + "Exception: cause: [" + e2.getCause() + "] class name ["
-						+ e2.getClass().getName() + "] [" + e2.toString() + "]");
-				objLogger.warn(
-						sMethod + "Exception: toString: [" + e2.toString() + " message: [" + e2.getMessage() + "]");
-				throw new Exception(csMsgDB_ErrorOpenSession);
-			}
-		}		
+		Session session = getSession();
+		
 		
 
 		try {
 			ojbUserType = (UserType) session.createQuery(sHQL).setParameter("userType", sName).getSingleResult();
 			objLogger.debug(sMethod + "object from databae: ojbUserType: [" + ojbUserType + "]");
 			return ojbUserType;
-		} catch (Exception e3) {
+		} catch (Exception e) {
 			objLogger.warn(sMethod + csMsgDB_ErrorGettingUserTypeByName + " sName: [" + sName + "]");
-			objLogger.warn(sMethod + "Exception: cause: [" + e3.getCause() + "] class name [" + e3.getClass().getName()
-					+ "] [" + e3.toString() + "]");
-			objLogger.warn(sMethod + "Exception: toString: [" + e3.toString() + " message: [" + e3.getMessage() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
 			throw new Exception(csMsgDB_ErrorGettingUserTypeByName);
 		}
 		
@@ -163,16 +143,15 @@ public class UserDAO implements Constants {
 			objEmployeeRole = (EmployeeRole) session.createQuery(sHQL).setParameter("employeeRole", sName).getSingleResult();
 			objLogger.debug(sMethod + "object from databae: ojbUserType: [" + objEmployeeRole + "]");
 			return objEmployeeRole;
-		} catch (Exception e3) {
+		} catch (Exception e) {
 			objLogger.warn(sMethod + csMsgDB_ErrorGettingEmployeeRoleByName + " sName: [" + sName + "]");
-			objLogger.warn(sMethod + "Exception: cause: [" + e3.getCause() + "] class name [" + e3.getClass().getName()
-					+ "] [" + e3.toString() + "]");
-			objLogger.warn(sMethod + "Exception: toString: [" + e3.toString() + " message: [" + e3.getMessage() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
 			throw new Exception(csMsgDB_ErrorGettingEmployeeRoleByName);
 		}
 		
 	}
-
 
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
@@ -193,23 +172,22 @@ public class UserDAO implements Constants {
 			objAddressType = (AddressType) session.createQuery(sHQL).setParameter("addressType", sName).getSingleResult();
 			objLogger.debug(sMethod + "object from databae: objAddressType: [" + objAddressType + "]");
 			return objAddressType;
-		} catch (Exception e3) {
+		} catch (Exception e) {
 			objLogger.warn(sMethod + csMsgDB_ErrorGettingAddressTypeByName + " sName: [" + sName + "]");
-			objLogger.warn(sMethod + "Exception: cause: [" + e3.getCause() + "] class name [" + e3.getClass().getName()
-					+ "] [" + e3.toString() + "]");
-			objLogger.warn(sMethod + "Exception: toString: [" + e3.toString() + " message: [" + e3.getMessage() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
 			throw new Exception(csMsgDB_ErrorGettingAddressTypeByName);
 		}
 		
 	}
-
 	
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
 	@Transactional
 	public User addUserAddress(AddressListDTO objAddressListDTO) throws Exception {
-		String sMethod = csCRT + "addUserAddress(): objAddressListDTO: [" + objAddressListDTO.toString() + "]";
-		objLogger.trace(sMethod + "Entered");
+		String sMethod = csCRT + "addUserAddress(): ";
+		objLogger.trace(sMethod + "Entered: objAddressListDTO: [" + objAddressListDTO.toString() + "]");
 		
 		Session session = sessionFactory.getCurrentSession();
 		for (int iCtr=0; iCtr<objAddressListDTO.getLstAddressDTO().size(); iCtr++) {
@@ -232,8 +210,9 @@ public class UserDAO implements Constants {
 				objLogger.debug(sMethod + "new address returned from database add: objAddress: [" + objAddress.toString() + "]");
 			} catch (Exception e) {
 				objLogger.warn(sMethod + csMsgDB_ErrorAddingAddress);
-				objLogger.warn(sMethod + "Exception: cause: [" + e.getCause() + "] class name [" + e.getClass().getName() + "] [" + e.toString() + "]");
-				objLogger.warn(sMethod + "Exception: toString: [" + e.toString() + " message: [" + e.getMessage() + "]");
+				objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+				objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+				objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
 				throw new Exception(csMsgDB_ErrorAddingAddress);
 			}			
 		}
@@ -249,17 +228,99 @@ public class UserDAO implements Constants {
 			return objUser;
 		} catch (Exception e) {
 			objLogger.warn(sMethod + csMsgDB_ErrorGettingUserByUsername);
-			objLogger.warn(sMethod + "Exception: cause: [" + e.getCause() + "] class name [" + e.getClass().getName() + "] [" + e.toString() + "]");
-			objLogger.warn(sMethod + "Exception: toString: [" + e.toString() + " message: [" + e.getMessage() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
 			throw new Exception(csMsgDB_ErrorGettingUserByUsername);
 		}
 		
 
+	}	
+	
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	@Transactional
+	public PhoneNumberType getPhoneNumberTypeByName(String sName) throws Exception {
+		String sMethod = csCRT + "getPhoneNumberTypeByName(): ";
+		objLogger.trace(sMethod + "Entered: sName: [" + sName + "]");
+
+		PhoneNumberType objPhoneNumberType = new PhoneNumberType();
+
+		String sHQL = "FROM PhoneNumberType pnt WHERE pnt.phoneNumberType = :phoneNumberType";
+		objLogger.debug(sMethod + "sHQL: [" + sHQL + "]" + " param: sName: [" + sName + "]");
+
+		objLogger.debug(sMethod + "getting sessionFactory.getCurrentSession()");
+		Session session = getSession();
+
+		try {
+			objPhoneNumberType = (PhoneNumberType) session.createQuery(sHQL).setParameter("phoneNumberType", sName).getSingleResult();
+			objLogger.debug(sMethod + "object from databae: objAddressType: [" + objPhoneNumberType + "]");
+			return objPhoneNumberType;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csMsgDB_ErrorGettingPhoneNumberTypeByName + " sName: [" + sName + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
+			throw new Exception(csMsgDB_ErrorGettingPhoneNumberTypeByName);
+		}
+		
 	}
+
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	@Transactional
+	public User addUserPhoneNumber(PhoneNumberListDTO ojbPhoneNumberListDTO) throws Exception {
+		String sMethod = csCRT + "addUserPhoneNumber(): ";
+		objLogger.trace(sMethod + "Entered: ojbPhoneNumberListDTO: [" + ojbPhoneNumberListDTO.toString() + "]");
+		
+		Session session = sessionFactory.getCurrentSession();
+		for (int iCtr=0; iCtr < ojbPhoneNumberListDTO.getLstPhoneNumberDTO().size(); iCtr++) {
+			PhoneNumberDTO objPhoneNumberDTO = ojbPhoneNumberListDTO.getLstPhoneNumberDTO().get(iCtr);
+			
+			String sPhoneNumber = objPhoneNumberDTO.getPhoneNumber();
+			
+			PhoneNumber objPhoneNumber = new PhoneNumber(sPhoneNumber);
+			objPhoneNumber.setPhoneNumberType(objPhoneNumberDTO.getPhoneNumberType());
+			objPhoneNumber.setUser(objPhoneNumberDTO.getUser());
+			
+			try {			
+				objLogger.debug(sMethod + "for username: [" + objPhoneNumber.getUser().getUsername() + "]");
+				objLogger.debug(sMethod + "\tadding phone number: [" + objPhoneNumber.toString() + "]");
+				session.persist(objPhoneNumber);
+				objLogger.debug(sMethod + "new address returned from database add: objPhoneNumber: [" + objPhoneNumber.toString() + "]");
+			} catch (Exception e) {
+				objLogger.warn(sMethod + csMsgDB_ErrorAddingPhoneNumber);
+				objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+				objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+				objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
+				throw new Exception(csMsgDB_ErrorAddingPhoneNumber);
+			}			
+		}
+
+		String sUsername = ojbPhoneNumberListDTO.getUsername();
+		
+		String sHQL = "FROM User u WHERE u.username = :username";
+		objLogger.debug(sMethod + "sHQL: [" + sHQL + "]" + " param: sUsername: [" + sUsername + "]");
+
+		try {
+			User objUser = (User) session.createQuery(sHQL).setParameter("username", sUsername).getSingleResult();
+			objLogger.debug(sMethod + "object from databae: objUser: [" + objUser + "]");
+			return objUser;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csMsgDB_ErrorGettingUserByUsername);
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
+			throw new Exception(csMsgDB_ErrorGettingUserByUsername);
+		}
+		
+
+	}	
 
 	
 	
-	
+	////////////////////// Utility Methods for this Class /////////////////////////////////////////
+	//
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
 	private Session getSession() throws Exception {
@@ -276,12 +337,11 @@ public class UserDAO implements Constants {
 			objLogger.debug(sMethod + "Attempting sessionFactory.openSession()");
 			try {
 				session = sessionFactory.openSession();
-			} catch (Exception e2) {
+			} catch (Exception e1) {
 				objLogger.debug(sMethod + "Exception: opening sessionFactory.openSession()");
-				objLogger.warn(sMethod + "Exception: cause: [" + e2.getCause() + "] class name ["
-						+ e2.getClass().getName() + "] [" + e2.toString() + "]");
-				objLogger.warn(
-						sMethod + "Exception: toString: [" + e2.toString() + " message: [" + e2.getMessage() + "]");
+				objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e1.getCause() + "]");
+				objLogger.warn(sMethod + csCRT + "Exception: class name [" + e1.getClass().getName() + "]");
+				objLogger.warn(sMethod + csCRT + "Exception: message: [" + e1.getMessage() + "]");
 				throw new Exception(csMsgDB_ErrorOpenSession);
 			}
 		}		
