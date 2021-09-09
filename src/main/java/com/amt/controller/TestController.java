@@ -34,6 +34,8 @@ http://localhost:8080/amt-mvc/amt_customer
 http://localhost:8080/amt-mvc/amt_user_type/CUSTOMER
 http://localhost:8080/amt-mvc/amt_empl_role/CUSTOMER
 
+http://localhost:8080/amt-mvc/amt_adx/tz67895
+
 
 
 http://localhost:4201/amt-mvc/amt_user/tw8253

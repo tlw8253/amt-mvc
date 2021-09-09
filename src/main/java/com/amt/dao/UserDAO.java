@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.amt.app.Constants;
-import com.amt.app.Constants.enumUserType;
+import com.amt.dto.AddressDTO;
+import com.amt.dto.AddressListDTO;
 import com.amt.dto.UserDTO;
+import com.amt.model.Address;
+import com.amt.model.AddressType;
 import com.amt.model.EmployeeRole;
 import com.amt.model.User;
 import com.amt.model.UserType;
@@ -29,7 +32,7 @@ public class UserDAO implements Constants {
 	@Transactional
 	public User getUserByUsername(String sName) throws Exception {
 		String sMethod = csCRT + "getUserByUsername(): sUsername: [" + sName + "]";
-		objLogger.trace(csCR + sMethod + "Entered");
+		objLogger.trace(sMethod + "Entered");
 		User objUser = new User();
 
 		String sHQL = "FROM User u WHERE u.username = :username";
@@ -53,8 +56,8 @@ public class UserDAO implements Constants {
 	//
 	@Transactional
 	public User addNewUser(UserDTO objUserDTO) throws Exception {
-		String sMethod = csCRT + "addNew(): objUserDTO: [" + objUserDTO.toString() + "]";
-		objLogger.trace(csCR + sMethod + "Entered");
+		String sMethod = csCRT + "addNewUser(): objUserDTO: [" + objUserDTO.toString() + "]";
+		objLogger.trace(sMethod + "Entered");
 
 		// by this time the service layer would have validated the parameters
 		String sUsername = objUserDTO.getUsername();
@@ -145,8 +148,8 @@ public class UserDAO implements Constants {
 	//
 	@Transactional
 	public EmployeeRole getEmployeeRoleByName(String sName) throws Exception {
-		String sMethod = csCRT + "getByName(): ";
-		objLogger.trace(csCR + sMethod + "Entered: sName: [" + sName + "]");
+		String sMethod = csCRT + "getEmployeeRoleByName(): ";
+		objLogger.trace(sMethod + "Entered: sName: [" + sName + "]");
 
 		EmployeeRole objEmployeeRole = new EmployeeRole();
 
@@ -171,6 +174,92 @@ public class UserDAO implements Constants {
 	}
 
 
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	@Transactional
+	public AddressType getAddressTypeByName(String sName) throws Exception {
+		String sMethod = csCRT + "getAddressTypeByName(): ";
+		objLogger.trace(sMethod + "Entered: sName: [" + sName + "]");
+
+		AddressType objAddressType = new AddressType();
+
+		String sHQL = "FROM AddressType at WHERE at.addressType = :addressType";
+		objLogger.debug(sMethod + "sHQL: [" + sHQL + "]" + " param: sName: [" + sName + "]");
+
+		objLogger.debug(sMethod + "getting sessionFactory.getCurrentSession()");
+		Session session = getSession();
+
+		try {
+			objAddressType = (AddressType) session.createQuery(sHQL).setParameter("addressType", sName).getSingleResult();
+			objLogger.debug(sMethod + "object from databae: objAddressType: [" + objAddressType + "]");
+			return objAddressType;
+		} catch (Exception e3) {
+			objLogger.warn(sMethod + csMsgDB_ErrorGettingAddressTypeByName + " sName: [" + sName + "]");
+			objLogger.warn(sMethod + "Exception: cause: [" + e3.getCause() + "] class name [" + e3.getClass().getName()
+					+ "] [" + e3.toString() + "]");
+			objLogger.warn(sMethod + "Exception: toString: [" + e3.toString() + " message: [" + e3.getMessage() + "]");
+			throw new Exception(csMsgDB_ErrorGettingAddressTypeByName);
+		}
+		
+	}
+
+	
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	@Transactional
+	public User addUserAddress(AddressListDTO objAddressListDTO) throws Exception {
+		String sMethod = csCRT + "addUserAddress(): objAddressListDTO: [" + objAddressListDTO.toString() + "]";
+		objLogger.trace(sMethod + "Entered");
+		
+		Session session = sessionFactory.getCurrentSession();
+		for (int iCtr=0; iCtr<objAddressListDTO.getLstAddressDTO().size(); iCtr++) {
+			AddressDTO objAddressDTO = objAddressListDTO.getLstAddressDTO().get(iCtr);
+			
+			String sAddressLine1 = objAddressDTO.getAddressLine1();
+			String sAddressLine2 = objAddressDTO.getAddressLine2();
+			String sAddressCity = objAddressDTO.getAddressCity();
+			String sAddressState = objAddressDTO.getAddressState();
+			String sAddressZipCode = objAddressDTO.getAddressZipCode();
+			
+			Address objAddress = new Address(sAddressLine1, sAddressLine2, sAddressCity, sAddressState, sAddressZipCode);
+			objAddress.setAddressType(objAddressDTO.getAddressType());
+			objAddress.setUser(objAddressDTO.getUser());
+			
+			try {			
+				objLogger.debug(sMethod + "for username: [" + objAddress.getUser().getUsername() + "]");
+				objLogger.debug(sMethod + "\tadding address: [" + objAddress.toString() + "]");
+				session.persist(objAddress);
+				objLogger.debug(sMethod + "new address returned from database add: objAddress: [" + objAddress.toString() + "]");
+			} catch (Exception e) {
+				objLogger.warn(sMethod + csMsgDB_ErrorAddingAddress);
+				objLogger.warn(sMethod + "Exception: cause: [" + e.getCause() + "] class name [" + e.getClass().getName() + "] [" + e.toString() + "]");
+				objLogger.warn(sMethod + "Exception: toString: [" + e.toString() + " message: [" + e.getMessage() + "]");
+				throw new Exception(csMsgDB_ErrorAddingAddress);
+			}			
+		}
+
+		String sUsername = objAddressListDTO.getUsername();
+		
+		String sHQL = "FROM User u WHERE u.username = :username";
+		objLogger.debug(sMethod + "sHQL: [" + sHQL + "]" + " param: sUsername: [" + sUsername + "]");
+
+		try {
+			User objUser = (User) session.createQuery(sHQL).setParameter("username", sUsername).getSingleResult();
+			objLogger.debug(sMethod + "object from databae: objUser: [" + objUser + "]");
+			return objUser;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csMsgDB_ErrorGettingUserByUsername);
+			objLogger.warn(sMethod + "Exception: cause: [" + e.getCause() + "] class name [" + e.getClass().getName() + "] [" + e.toString() + "]");
+			objLogger.warn(sMethod + "Exception: toString: [" + e.toString() + " message: [" + e.getMessage() + "]");
+			throw new Exception(csMsgDB_ErrorGettingUserByUsername);
+		}
+		
+
+	}
+
+	
+	
+	
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
 	private Session getSession() throws Exception {

@@ -1,0 +1,36 @@
+package com.amt.dto;
+
+import com.amt.model.AddressType;
+import com.amt.model.User;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+//DTO - Data Transfer Object
+// This is to be used in the controller class to get parameters by body
+@Getter @Setter @EqualsAndHashCode @ToString @NoArgsConstructor
+public class AddressDTO {
+	private String addressLine1 = "";
+	private String addressLine2 = "";
+	private String addressCity = "";
+	private String addressState = "";
+	private String addressZipCode = "";
+	private AddressType addressType;
+	private User user;
+
+	public AddressDTO(String addressLine1, String addressLine2, String addressCity, String addressState, String addressZipCode) {
+		this.addressLine1 = addressLine1;
+		this.addressLine2 = addressLine2;
+		this.addressCity = addressCity;
+		this.addressState = addressState;
+		this.addressZipCode = addressZipCode;
+	}
+
+	
+	
+	
+
+}// END Class

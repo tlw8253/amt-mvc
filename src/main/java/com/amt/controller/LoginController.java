@@ -108,7 +108,7 @@ public class LoginController implements Constants {
 			objLogger.debug(sMethod + "username: [" + objUser.getUsername() + "] is being logged out.");
 			session.setAttribute(csSessionCurrentUser, null);			
 			
-			return ResponseEntity.status(200).body(new MessageDTO(csMsgSessionUserNotActive));
+			return ResponseEntity.status(200).body(new MessageDTO(csMsgSessionUserLoggedOut));
 		}
 
 	}

@@ -334,6 +334,7 @@ public interface Constants {
 	String csMsgDB_ErrorAddingUserType = "Error with database when adding User Type.";
 	String csMsgDB_ErrorGettingUserTypeByName = "Error with database when getting User Type by name.";
 	String csMsgDB_ErrorGettingEmployeeRoleByName = "Error with database when getting Employee Role by name.";
+	String csMsgDB_ErrorGettingAddressTypeByName = "Error with database when getting Address Type by name.";
 	String csMsgDB_ErrorAddingUser = "Database error when adding a new user.";
 	String csMsgDB_ErrorAddingAddress = "Database error when adding a new address.";
 	String csMsgDB_ErrorAddingPhoneNumber = "Error with database when adding Phone Number.";
@@ -357,6 +358,7 @@ public interface Constants {
 	String csMsgBadParamAddAddress = "One or more add Address parameters are invalid.";
 	String csMsgBadParamLoginUsernamePwdBlank = "Username and password must contain values.";
 	String csMsgBadParamLoginUsernamePwdFormat = "Username and/or password format is invalid.";
+	String csMsgBadParamnUsernameFormat = "Username format is invalid.";
 	String csMsgBadParamAddPhoneNumber = "One or more add Phone Number parameters are invalid.";
 	String csMsgBadParamAddCatalogItem = "One or more add Catalog Item parameters are invalid.";
 	String csMsgBadParamGetUserByUsername = "The user name provided was not alpha numeric or length was invalid.";
@@ -375,7 +377,7 @@ public interface Constants {
 	String csMsgEmployeeNotAuthorizeCatalog = "Employee is not authorize to create catalog items.";
 	String csMsgAutenticationFailed = "Autentication failed for username and password provided.";
 	String csMsgSessionUserNotActive = "There is no active login session.";
-	String csMsgSessionUserLoggedOut = "The user is logged out.";
+	String csMsgSessionUserLoggedOut = "The session is logged out.";
 	String csMsgSessionAlreadyLoggedIn = "There is already a login session.";
 
 	
