@@ -333,6 +333,7 @@ public interface Constants {
 	String csMsgDB_ErrorAddingPhoneNumberType = "Error with database when adding Phone Number Type.";
 	String csMsgDB_ErrorAddingUserType = "Error with database when adding User Type.";
 	String csMsgDB_ErrorGettingUserTypeByName = "Error with database when getting User Type by name.";
+	String csMsgDB_ErrorGettingOrderStatusByName = "Error with database when getting Order Status by name.";
 	String csMsgDB_ErrorGettingEmployeeRoleByName = "Error with database when getting Employee Role by name.";
 	String csMsgDB_ErrorGettingAddressTypeByName = "Error with database when getting Address Type by name.";
 	String csMsgDB_ErrorGettingPhoneNumberTypeByName = "Error with database when getting Phone Number Type by name.";

@@ -16,13 +16,16 @@ import com.amt.app.Constants;
 import com.amt.dto.AddAddressDTO;
 import com.amt.dto.AddAddressListDTO;
 import com.amt.dto.AddCustomerDTO;
+import com.amt.dto.AddOrderDTO;
 import com.amt.dto.MessageDTO;
 import com.amt.exception.BadParameterException;
 import com.amt.exception.DatabaseException;
 import com.amt.model.EmployeeRole;
+import com.amt.model.Order;
 import com.amt.model.User;
 import com.amt.model.UserType;
 import com.amt.service.AddressService;
+import com.amt.service.OrderService;
 import com.amt.service.UserService;
 
 @RestController
@@ -34,25 +37,25 @@ public class OrderController implements Constants {
 	private Logger objLogger = LoggerFactory.getLogger(OrderController.class);
 
 	@Autowired //Singleton scoped bean
-	private AddressService objAddressService;
+	private OrderService objOrderService;
 	
-	public OrderController(AddressService objAddressService) {
-		this.objAddressService = objAddressService;
+	public OrderController(OrderService objOrderService) {
+		this.objOrderService = objOrderService;
 	}
 
 
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
 	@PostMapping(path = "/amt_order/{username}")
-	public ResponseEntity<Object> addCustomerOrder(@PathVariable("username") String username, @RequestBody AddAddressListDTO objAddAddressListDTO){
+	public ResponseEntity<Object> addCustomerOrder(@PathVariable("username") String username, @RequestBody AddOrderDTO objAddOrderDTO){
 		String sMethod = "addAddressByList(): ";
-		objLogger.trace(sMethod + "Entered: username: [" + username + "] addUserDTO: [" + objAddAddressListDTO.toString() + "]" + csCR);
+		objLogger.trace(sMethod + "Entered: username: [" + username + "] objAddOrderDTO: [" + objAddOrderDTO.toString() + "]" + csCR);
 		
 		try {
 			
-			User objUser = objAddressService.addAddressByList(username, objAddAddressListDTO);
-			objLogger.debug(csCR + sMethod + "object returned from service: objUser: [" + objUser.toString() + "]");
-			return ResponseEntity.status(200).body(objUser);
+			Order objOrder = objOrderService.addOrder(username, objAddOrderDTO);
+			objLogger.debug(csCR + sMethod + "object returned from service: objOrder: [" + objOrder.toString() + "]");
+			return ResponseEntity.status(200).body(objOrder);
 			
 		} catch (DatabaseException e) {
 			objLogger.debug(csCR + sMethod + "DatabaseException: [" + e.getMessage() + "]");
@@ -63,28 +66,6 @@ public class OrderController implements Constants {
 		}		
 	}
 
-	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	@PostMapping(path = "/amt_adx/{username}")
-	public ResponseEntity<Object> addAddress(@PathVariable("username") String username, @RequestBody AddAddressDTO objAddAddressDTO){
-		String sMethod = "addAddress(): ";
-		objLogger.trace(sMethod + "Entered: username: [" + username + "] addUserDTO: [" + objAddAddressDTO.toString() + "]" + csCR);
-		
-		try {
-			
-			User objUser = objAddressService.addAddress(username, objAddAddressDTO);
-			objLogger.debug(csCRT + sMethod + "object returned from service: objUser: [" + objUser.toString() + "]");
-			return ResponseEntity.status(200).body(objUser);
-			
-		} catch (DatabaseException e) {
-			objLogger.debug(csCRT + sMethod + "DatabaseException: [" + e.getMessage() + "]");
-			return ResponseEntity.status(400).body(new MessageDTO(e.getMessage()));
-		} catch (BadParameterException e) {
-			objLogger.debug(csCRT + sMethod + "BadParameterException: [" + e.getMessage() + "]");
-			return ResponseEntity.status(400).body(new MessageDTO(e.getMessage()));
-		}		
-	}
-	
 	
 	
 	

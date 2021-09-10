@@ -23,8 +23,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.amt.dao.ShipDao;
-import com.amt.dto.AddShipDTO;
 import com.amt.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

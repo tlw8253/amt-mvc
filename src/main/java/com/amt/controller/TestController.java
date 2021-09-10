@@ -39,6 +39,8 @@ http://localhost:8080/amt-mvc/amt_adx/tz12346
 http://localhost:8080/amt-mvc/amt_list_phone/bs67895
 http://localhost:8080/amt-mvc/amt_phone/tz12346
 
+http://localhost:8080/amt-mvc/amt_order/tz12346
+
 
 http://localhost:4201/amt-mvc/amt_user/tw8253
 

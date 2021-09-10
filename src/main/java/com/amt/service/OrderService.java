@@ -1,5 +1,7 @@
 package com.amt.service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.amt.app.Constants;
+import com.amt.app.Constants.enumOrderStatus;
 import com.amt.dao.OrderDAO;
 import com.amt.dao.UserDAO;
 import com.amt.dto.AddAddressDTO;
@@ -17,11 +20,14 @@ import com.amt.dto.AddOrderDTO;
 import com.amt.dto.AddOrderedItemDTO;
 import com.amt.dto.AddressDTO;
 import com.amt.dto.AddressListDTO;
+import com.amt.dto.OrderDTO;
 import com.amt.dto.UserDTO;
 import com.amt.exception.BadParameterException;
 import com.amt.exception.DatabaseException;
 import com.amt.model.AddressType;
+import com.amt.model.CatalogItem;
 import com.amt.model.Order;
+import com.amt.model.OrderStatus;
 import com.amt.model.OrderedItem;
 import com.amt.model.User;
 import com.amt.util.Validate;
@@ -50,8 +56,7 @@ public class OrderService implements Constants {
 		if (!UserService.isValidUsername(sUsername)) {
 			objLogger.debug(sMethod + "Invalid sUsername: [" + sUsername + "]");
 			throw new BadParameterException(csMsgBadParamnUsernameFormat);
-		}
-		
+		}		
 		
 		if (isValidAddOrderDTO(objAddOrderDTO)) {
 			try {
@@ -62,22 +67,41 @@ public class OrderService implements Constants {
 				
 				for (int iCtr=0; iCtr < lstAddOrderedItemDTO.size(); iCtr++) {
 					AddOrderedItemDTO objAddOrderedItemDTO = lstAddOrderedItemDTO.get(iCtr);
+					objLogger.debug(sMethod + "parseing objAddOrderedItemDTO: [" + objAddOrderedItemDTO.toString() + "]");
+				
+					String sCatalogItemName = objAddOrderedItemDTO.getCatalogItemName();
+					Double dOrderItemPrice = Double.parseDouble(objAddOrderedItemDTO.getOrderItemPrice());
+					int iOrderItemQty = Integer.parseInt(objAddOrderedItemDTO.getOrderItemQty());
+					
+					objLogger.debug(sMethod + "getting object for catalog item sCatalogItemName: [" + sCatalogItemName + "]");
+					CatalogItem objCatalogItem = objOrderDAO.getCatalogItemByName(sCatalogItemName);
+					objLogger.debug(sMethod + "object returned for catalog item objCatalogItem: [" + objCatalogItem.toString() + "]");
 					
 					//need to finish this code
-					OrderedItem objOrderedItem = new OrderedItem();
-					
+					OrderedItem objOrderedItem = new OrderedItem(dOrderItemPrice, iOrderItemQty, objCatalogItem);
+					objLogger.debug(sMethod + "adding to ordered list objOrderedItem: [" + objOrderedItem.toString() + "]");					
 					lstOrderedItem.add(objOrderedItem);
 				}		
 
+				Double dAmount = Double.parseDouble(objAddOrderDTO.getOrderAmount());
+				Timestamp objOrderSubmitted = Timestamp.valueOf(LocalDateTime.now());				
+				Timestamp objOrderSent = new Timestamp(0);
+				OrderStatus objOrderStatus = objOrderDAO.getOrderStatusByName(csarrOrderStatus[enumOrderStatus.NEW.pos]);
+		
+				User objCustomer = objOrderDAO.getCustomerByUsername(sUsername);
+						
+				OrderDTO objOrderDTO = new OrderDTO(dAmount, objOrderSubmitted, objOrderSent);
+				objOrderDTO.setCustomer(objCustomer);
+				objOrderDTO.setOrderStatus(objOrderStatus);
+				objOrderDTO.setLstOrderedItem(lstOrderedItem);
 				
+				Order objOrder = objOrderDAO.addOrder(objOrderDTO);
 				
-				
-				Order objOrder = objOrderDAO.addOrder(null);
 				
 				return objOrder;
 
 			} catch (Exception e) {// not sure what exception hibernate throws but not SQLException
-				objLogger.debug(sMethod + csCR + "Invalid sUsername: [" + sUsername + "]");
+				objLogger.debug(sMethod + csCR + "While adding order for sUsername: [" + sUsername + "]");
 				objLogger.debug(sMethod + csMsgDB_ErrorAddingOrder);
 				objLogger.warn(sMethod + "Exception: [" + e.toString() + "] [" + e.getMessage() + "]");
 				throw new DatabaseException(csMsgDB_ErrorAddingOrder);

@@ -17,8 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.amt.dao.ShipDao;
-import com.amt.dto.AddShipDTO;
 import com.amt.model.User;
 
 @ExtendWith(SpringExtension.class)

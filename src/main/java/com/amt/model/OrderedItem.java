@@ -49,10 +49,9 @@ public class OrderedItem implements Constants {
 		this.orderItemQty = orderQty;
 	}
 
-	public OrderedItem(Double orderPrice, int orderQty, Order order, CatalogItem catalogItem) {
+	public OrderedItem(Double orderPrice, int orderQty, CatalogItem catalogItem) {
 		this.orderItemPrice = orderPrice;
 		this.orderItemQty = orderQty;
-		this.order = order;
 		this.catalogItem = catalogItem;
 	}
 

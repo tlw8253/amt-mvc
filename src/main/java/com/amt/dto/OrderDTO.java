@@ -17,7 +17,7 @@ import lombok.ToString;
 // This is to be used in the controller class to get parameters by body
 @Getter @Setter @EqualsAndHashCode @ToString @NoArgsConstructor
 public class OrderDTO {
-	private User user;
+	private User customer;
 	private double orderAmount;
 	private Timestamp orderSubmitted;
 	private Timestamp orderSent;

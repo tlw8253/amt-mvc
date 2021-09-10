@@ -46,10 +46,10 @@ public class OrderDAO implements Constants {
 	@Transactional
 	public Order addOrder(OrderDTO objOrderDTO) throws Exception {
 		String sMethod = csCRT + "addOrder(): ";
-		objLogger.trace(sMethod + "Entered: objOrderDTO: [" + objOrderDTO.toString() + "]");
+		objLogger.trace(sMethod + "Entered: objOrderDTO: [" + objOrderDTO.toString() + "]" + csCR);
 
 		// by this time the service layer would have validated the parameters
-		User objUser = objOrderDTO.getUser();
+		User objUser = objOrderDTO.getCustomer();
 		double dOrderAmount = objOrderDTO.getOrderAmount();
 		Timestamp tsOrderSubmitted = objOrderDTO.getOrderSubmitted();
 		Timestamp tsOrderSent = objOrderDTO.getOrderSent();
@@ -94,6 +94,82 @@ public class OrderDAO implements Constants {
 
 	}
 
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	@Transactional
+	public CatalogItem getCatalogItemByName(String sName) throws Exception {
+		String sMethod = csCRT + "getCatalogItemByName(): ";
+		objLogger.trace(sMethod + "Entered: sName: [" + sName + "]" + csCR);
+		CatalogItem objCatalogItem = new CatalogItem();
+
+		String sHQL = "FROM CatalogItem ci WHERE ci.catalogItemName = :catalogItemName";
+		objLogger.debug(sMethod + "sHQL: [" + sHQL + "]" + " param: sName: [" + sName + "]");
+
+		Session session = getSession();
+		try {
+			objCatalogItem = (CatalogItem) session.createQuery(sHQL).setParameter("catalogItemName", sName).getSingleResult();
+			objLogger.debug(sMethod + "object from databae: objCatalogItem: [" + objCatalogItem + "]");
+			return objCatalogItem;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csMsgDB_ErrorGettingCatalogItemByName);
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
+			throw new Exception(csMsgDB_ErrorGettingCatalogItemByName);
+		}
+	}	
+
+
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	@Transactional
+	public OrderStatus getOrderStatusByName(String sName) throws Exception {
+		String sMethod = csCRT + "getCatalogItemByName(): ";
+		objLogger.trace(sMethod + "Entered: sName: [" + sName + "]" + csCR);
+		OrderStatus objOrderStatus = new OrderStatus();
+
+		String sHQL = "FROM OrderStatus os WHERE os.orderStatus = :orderStatus";
+		objLogger.debug(sMethod + "sHQL: [" + sHQL + "]" + " param: sName: [" + sName + "]");
+
+		Session session = getSession();
+		try {
+			objOrderStatus = (OrderStatus) session.createQuery(sHQL).setParameter("orderStatus", sName).getSingleResult();
+			objLogger.debug(sMethod + "object from databae: objOrderStatus: [" + objOrderStatus + "]");
+			return objOrderStatus;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csMsgDB_ErrorGettingOrderStatusByName);
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
+			throw new Exception(csMsgDB_ErrorGettingOrderStatusByName);
+		}
+	}	
+
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	@Transactional
+	public User getCustomerByUsername(String sName) throws Exception {
+		String sMethod = csCRT + "getCustomerByUsername(): ";
+		objLogger.trace(sMethod + "Entered: sName: [" + sName + "]");
+		User objUser = new User();
+
+		String sHQL = "FROM User u WHERE u.username = :username";
+		objLogger.debug(sMethod + "sHQL: [" + sHQL + "]" + " param: sName: [" + sName + "]");
+
+		Session session = sessionFactory.getCurrentSession();
+		try {
+			objUser = (User) session.createQuery(sHQL).setParameter("username", sName).getSingleResult();
+			objLogger.debug(sMethod + "object from databae: objUser: [" + objUser + "]");
+			return objUser;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csMsgDB_ErrorGettingUserByUsername);
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
+			throw new Exception(csMsgDB_ErrorGettingUserByUsername);
+		}
+	}	
+	
 	////////////////////// Utility Methods for this Class
 	////////////////////// /////////////////////////////////////////
 	//
@@ -101,7 +177,7 @@ public class OrderDAO implements Constants {
 	//
 	private Session getSession() throws Exception {
 		String sMethod = csCRT + "getSession(): ";
-		objLogger.trace(sMethod + "Entered.");
+		objLogger.trace(sMethod + "Entered." + csCR);
 
 		Session session;
 
