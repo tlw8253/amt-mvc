@@ -3,6 +3,9 @@ package com.amt.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -33,6 +36,31 @@ public class CatalogItemDAO implements Constants {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	@Transactional
+	public List<CatalogItem> getCatalogList() throws Exception {
+		String sMethod = csCRT + "getCatalogList(): ";
+		objLogger.trace(sMethod + "Entered.");
+		List<CatalogItem> lstCatalogItem = new ArrayList<CatalogItem>();
+
+		String sHQL = "FROM CatalogItem ci";
+		objLogger.debug(sMethod + "sHQL: [" + sHQL + "]");
+
+		Session session = getSession();
+		try {
+			lstCatalogItem = (List<CatalogItem>) session.createQuery(sHQL).getResultList();
+			objLogger.debug(sMethod + "object from databae: lstCatalogItem: [" + lstCatalogItem.toString() + "]");
+			return lstCatalogItem;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csMsgDB_ErrorGettingCatalogList);
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
+			throw new Exception(csMsgDB_ErrorGettingCatalogList);
+		}
+	}	
 
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//

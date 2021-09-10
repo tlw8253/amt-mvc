@@ -349,6 +349,9 @@ public interface Constants {
 	String csMsgDB_ErrorGetCurrentSession = "Error getting a current database session.";
 	String csMsgDB_ErrorOpenSession = "Error opening a current database session.";
 	String csMsgDB_NotFoundGettingUserByUsername = "Record not found when getting user by username.";
+	String csMsgDB_ErrorGettingUserAddressList = "Error getting address list for the username.";
+	String csMsgDB_ErrorGettingCatalogList = "Error getting the catalog list.";
+	String csMsgDB_ErrorGettingUserList = "Error getting the user list.";
 	
 	////////////////////////////////////////////////////////////////////////////////////
 	String csMsgBadParamUserType = "Invalid User Type parameters received.";

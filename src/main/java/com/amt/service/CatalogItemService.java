@@ -20,6 +20,7 @@ import com.amt.dto.PhoneNumberListDTO;
 import com.amt.dto.UserDTO;
 import com.amt.exception.BadParameterException;
 import com.amt.exception.DatabaseException;
+import com.amt.model.Address;
 import com.amt.model.CatalogItem;
 import com.amt.model.CatalogItemType;
 import com.amt.model.PhoneNumberType;
@@ -37,6 +38,25 @@ public class CatalogItemService implements Constants {
 		String sMethod = csCRT + "CatalogItemService(): ";
 		objLogger.trace(sMethod + "Constructor Entered.");		
 		this.objCatalogItemDAO = objCatalogItemDAO;
+	}
+
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	public List<CatalogItem> getAllCatalogItems() throws DatabaseException, BadParameterException {
+		String sMethod = csCRT + "getAllCatalogItems(): ";
+		objLogger.trace(sMethod + "Entered." + csCR);
+		List<CatalogItem> lstCatalogItems = new ArrayList<CatalogItem>();
+		
+		try {
+			lstCatalogItems = objCatalogItemDAO.getCatalogList();
+			objLogger.debug(sMethod + "list object retrieved lstCatalogItems: [" + lstCatalogItems.toString() + "]");
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csCR + "Exception getting the Catalog List.");
+			objLogger.warn(sMethod + "Exception: [" + e.toString() + "] [" + e.getMessage() + "]");
+			throw new DatabaseException(csMsgDB_ErrorGettingCatalogList);
+		}
+
+		return lstCatalogItems;
 	}
 
 	

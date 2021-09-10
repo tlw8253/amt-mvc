@@ -41,6 +41,11 @@ http://localhost:8080/amt-mvc/amt_phone/tz12346
 
 http://localhost:8080/amt-mvc/amt_order/tz12346
 
+http://localhost:8080/amt-mvc/get_adx/tz12346
+http://localhost:8080/amt-mvc/get_cat_items
+http://localhost:8080/amt-mvc/get_users
+http://localhost:8080/amt-mvc/get_users/EMPLOYEE
+
 
 http://localhost:4201/amt-mvc/amt_user/tw8253
 

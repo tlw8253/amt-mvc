@@ -3,6 +3,9 @@ package com.amt.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -18,6 +21,7 @@ import com.amt.dto.PhoneNumberListDTO;
 import com.amt.dto.UserDTO;
 import com.amt.model.Address;
 import com.amt.model.AddressType;
+import com.amt.model.CatalogItem;
 import com.amt.model.EmployeeRole;
 import com.amt.model.PhoneNumber;
 import com.amt.model.PhoneNumberType;
@@ -30,6 +34,56 @@ public class UserDAO implements Constants {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	@Transactional
+	public List<User> getUsersByType(String sType) throws Exception {
+		String sMethod = csCRT + "getUsersByType(): ";
+		objLogger.trace(sMethod + "Entered.");
+		List<User> lstUser = new ArrayList<User>();
+
+		String sHQL = "FROM User u WHERE u.userType.userType = :userType";
+		objLogger.debug(sMethod + "sHQL: [" + sHQL + "]" + " param: sType: [" + sType + "]");
+
+		Session session = getSession();
+		try {
+			lstUser = (List<User>) session.createQuery(sHQL).setParameter("userType", sType).getResultList();
+			objLogger.debug(sMethod + "object from databae: lstUser: [" + lstUser.toString() + "]");
+			return lstUser;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csMsgDB_ErrorGettingUserList);
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
+			throw new Exception(csMsgDB_ErrorGettingUserList);
+		}
+	}	
+
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	@Transactional
+	public List<User> getUsers() throws Exception {
+		String sMethod = csCRT + "getUsers(): ";
+		objLogger.trace(sMethod + "Entered.");
+		List<User> lstUser = new ArrayList<User>();
+
+		String sHQL = "FROM User u";
+		objLogger.debug(sMethod + "sHQL: [" + sHQL + "]");
+
+		Session session = getSession();
+		try {
+			lstUser = (List<User>) session.createQuery(sHQL).getResultList();
+			objLogger.debug(sMethod + "object from databae: lstUser: [" + lstUser.toString() + "]");
+			return lstUser;
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csMsgDB_ErrorGettingUserList);
+			objLogger.warn(sMethod + csCRT + "Exception: cause: [" + e.getCause() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: class name [" + e.getClass().getName() + "]");
+			objLogger.warn(sMethod + csCRT + "Exception: message: [" + e.getMessage() + "]");
+			throw new Exception(csMsgDB_ErrorGettingUserList);
+		}
+	}	
 
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//

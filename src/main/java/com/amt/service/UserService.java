@@ -1,5 +1,8 @@
 package com.amt.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import com.amt.dto.AddCustomerDTO;
 import com.amt.dto.UserDTO;
 import com.amt.exception.BadParameterException;
 import com.amt.exception.DatabaseException;
+import com.amt.model.CatalogItem;
 import com.amt.model.EmployeeRole;
 import com.amt.model.User;
 import com.amt.model.UserType;
@@ -31,6 +35,43 @@ public class UserService implements Constants {
 		this.objUserDAO = objUserDAO;
 	}
 
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	public List<User> getUsersByType(String sType) throws DatabaseException, BadParameterException {
+		String sMethod = csCRT + "getUsersByType(): ";
+		objLogger.trace(sMethod + "Entered: sType: [" + sType + "]" + csCR);
+		List<User> lstUser = new ArrayList<User>();
+		
+		try {
+			lstUser = objUserDAO.getUsersByType(sType);
+			objLogger.debug(sMethod + "list object retrieved lstUser: [" + lstUser.toString() + "]");
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csCR + "Exception getting the User List.");
+			objLogger.warn(sMethod + "Exception: [" + e.toString() + "] [" + e.getMessage() + "]");
+			throw new DatabaseException(csMsgDB_ErrorGettingUserList);
+		}
+
+		return lstUser;
+	}
+
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	public List<User> getAllUsers() throws DatabaseException, BadParameterException {
+		String sMethod = csCRT + "getAllUser(): ";
+		objLogger.trace(sMethod + "Entered." + csCR);
+		List<User> lstUser = new ArrayList<User>();
+		
+		try {
+			lstUser = objUserDAO.getUsers();
+			objLogger.debug(sMethod + "list object retrieved lstUser: [" + lstUser.toString() + "]");
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csCR + "Exception getting the User List.");
+			objLogger.warn(sMethod + "Exception: [" + e.toString() + "] [" + e.getMessage() + "]");
+			throw new DatabaseException(csMsgDB_ErrorGettingUserList);
+		}
+
+		return lstUser;
+	}
 
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//

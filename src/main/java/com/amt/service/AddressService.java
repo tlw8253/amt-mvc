@@ -9,14 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.amt.app.Constants;
+import com.amt.dao.AddressDAO;
 import com.amt.dao.UserDAO;
 import com.amt.dto.AddAddressDTO;
 import com.amt.dto.AddAddressListDTO;
 import com.amt.dto.AddressDTO;
 import com.amt.dto.AddressListDTO;
-import com.amt.dto.UserDTO;
 import com.amt.exception.BadParameterException;
 import com.amt.exception.DatabaseException;
+import com.amt.model.Address;
 import com.amt.model.AddressType;
 import com.amt.model.User;
 import com.amt.util.Validate;
@@ -26,15 +27,39 @@ public class AddressService implements Constants {
 	private Logger objLogger = LoggerFactory.getLogger(AddressService.class);
 	
 	private UserDAO objUserDAO;
+	private AddressDAO objAddressDAO;
+	 
 
 	@Autowired
-	public AddressService(UserDAO objUserDAO) {
+	public AddressService(UserDAO objUserDAO, AddressDAO objAddressDAO) {
 		String sMethod = csCRT + "AddressService(): ";
-		objLogger.trace(sMethod + "Construtor Entered.");
+		objLogger.trace(sMethod + "Constructor Entered.");
 		
 		this.objUserDAO = objUserDAO;
+		this.objAddressDAO = objAddressDAO;
 	}
 
+	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	public List<Address> getAddressForUser(String sUsername) throws DatabaseException, BadParameterException {
+		String sMethod = csCRT + "getAddressForUser(): ";
+		objLogger.trace(sMethod + "Entered: sUsername: [" + sUsername + "]" + csCR);
+		List<Address> lstAddress = new ArrayList<Address>();
+		
+		try {
+			User objUser = objUserDAO.getUserByUsername(sUsername);
+			objLogger.debug(sMethod + "user object retrieved objUser: [" + objUser.toString() + "]");
+			lstAddress = objAddressDAO.getAddressForUser(objUser);
+			objLogger.debug(sMethod + "list object retrieved lstAddress: [" + lstAddress.toString() + "]");
+		} catch (Exception e) {
+			objLogger.warn(sMethod + csCR + "Exception getting Address List for sUsername: [" + sUsername+ "]");
+			objLogger.warn(sMethod + "Exception: [" + e.toString() + "] [" + e.getMessage() + "]");
+			throw new DatabaseException(csMsgDB_ErrorGettingUserAddressList);
+		}
+
+		return lstAddress;
+	}
+	
 	// ###//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
 	public User addAddress(String sUsername, AddAddressDTO objAddAddressDTO) throws DatabaseException, BadParameterException {
