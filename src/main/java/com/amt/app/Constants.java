@@ -23,13 +23,13 @@ public interface Constants {
 	String csAWS_Pwd = "Black1357Bear";
 	String csLocalHost_Pwd = "tlw8253";
 	
-//	String csCurrentDBURL = csAWS_DB_URL;
-//	String csCurrentUsername = csAWS_Username;
-//	String csCurrentPwd = csAWS_Pwd;
+	String csCurrentDBURL = csAWS_DB_URL;
+	String csCurrentUsername = csAWS_Username;
+	String csCurrentPwd = csAWS_Pwd;
 
-	String csCurrentDBURL = csLocalHostURL;
-	String csCurrentUsername = csLocalHost_Username;
-	String csCurrentPwd = csLocalHost_Pwd;
+//	String csCurrentDBURL = csLocalHostURL;
+//	String csCurrentUsername = csLocalHost_Username;
+//	String csCurrentPwd = csLocalHost_Pwd;
 
 	
 	String csDatabaseConnectionURL = csCurrentDBURL + csDatabaseName;
