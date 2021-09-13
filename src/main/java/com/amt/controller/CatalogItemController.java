@@ -26,7 +26,7 @@ import com.amt.service.CatalogItemService;
 //@CrossOrigin("http://localhost:4201")
 //this annotation is what the backend will use to tell the browser that the source of the JavaScript code that is sending the request
 //  to the backend is a "trusted" source
-@CrossOrigin(Constants.csCrossOriginHttp)
+@CrossOrigin(originPatterns = Constants.csCrossOriginHttp, allowCredentials = "true")
 public class CatalogItemController implements Constants {
 	private Logger objLogger = LoggerFactory.getLogger(CatalogItemController.class);
 

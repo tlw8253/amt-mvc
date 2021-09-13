@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <!-- Finance managers can log in and view all reimbursement requests and past history for 
+            all employees in the company. Finance managers are authorized to approve and deny 
+            requests for expense reimbursement. -->
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>WWMS Finance Reimbursement Review</title>
+
+         <link rel="stylesheet" href="css/style.css" />
+    </head>
+
+    <body onload="onPageLoad()">
+
+        <p id="right_links">
+            <a href="javascript:gotoReimbursement()" >New Reimbursement</a>
+            <label for="spaces">          </label>
+            <a href="javascript:logout()" >Logout</a>
+        </p>
+
+        <h1>Wally World Movie Studios</h1>
+        <h2>Expense Reimbursement System</h2>
+        <h3>Finance Reimbursement Review</h3>
+
+        <div>
+            <label for="this_username"><strong>Username: </strong></label>
+            <input type="input" name="username" id="username" readonly>
+            <label for="this_userrole"><strong>Role: </strong></label>
+            <input type="input" name="userrole" id="userrole" readonly>
+        </div>
+
+        <div><br>
+            <form name="select_for_search_req" id="select_for_search_req">
+                <div>
+                    <h3>Search for Reinbursement Requests</h3>
+                    
+                    <label for="reimbursement_number">Search by Reinbursement Number: </label>
+                    <input type="text" name="reimbursement_number" id="reimbursement_number" size="10"><br>
+
+                    <input type="radio" id="radio_all_records" name="record_filter" value="ALL">
+                    <label for="records" name="all_records" id="all_records" >Retrieve ALL reimbursement.</label>
+
+                    <input type="radio" id="radio_pending_records" name="record_filter" value="PENDING">
+                    <label for="records" name="pending_records" id="pending_records" >Filter for PENDING reimbursement.</label><br>
+
+                    <input type="radio" id="radio_approved_records" name="record_filter" value="APPROVED">
+                    <label for="records" name="approved_records" id="approved_records" >Filter for APPROVED reimbursement.</label>
+
+                    <input type="radio" id="radio_denied_records" name="record_filter" value="DENIED">
+                    <label for="records" name="denied_records" id="denined_records" >Filter for DENIED reimbursement.</label><br>
+                </div>
+                <div>
+                    <br><button class="btn btn-primary mt-3" id="btn_search">Search</button>
+                    <button class="btn btn-primary mt-3" id="btn_clear">Clear</button>
+                </div>
+            </form>
+        </div>
+
+
+        <br>
+
+        <form name="review_reimb_record" id="review_reimb_record">
+            <h3>Reimbursement Record for Review</h3>
+            <div>
+                <label for="review_rec_id">Id: </label>
+                <input type="text" name="review_rec_id" id="review_rec_id" size="3" readonly>
+                <label for="review_rec_id">Status: </label>
+                <input type="text" name="review_reimb_status" id="review_reimb_status" size="8" readonly>
+                <label for="review_reimb_amount">Type: </label>
+                <input type="text" name="review_reimb_type" id="review_reimb_type" size="8" readonly>
+                <label for="review_reimb_amount">Amount: </label>
+                <input type="text" name="review_reimb_amount" id="review_reimb_amount" size="5" readonly><br>
+                <label for="review_reimb_author_un">Submitted By: </label>
+                <input type="text" name="review_reimb_author_un" id="review_reimb_author_un" size="5" readonly>
+                <label for="review_reimb_author_role">Role: </label>
+                <input type="text" name="review_reimb_author_role" id="review_reimb_author_role" size="10" readonly>
+                <label for="review_reimb_receipt">Receipt: </label>
+                <input type="text" name="review_reimb_receipt" id="review_reimb_receipt" size="15" readonly><br><br> 
+                <label for="reveiw_reimb_description">Description:</label>
+                <textarea rows="3" cols="50" name="review_reimb_description"
+                id="review_reimb_description" minlength="10" maxlength="255" readonly></textarea>
+                <br><label for="review_reimb_submitted">Submitted: </label>
+                <input type="text" name="review_reimb_submitted" id="review_reimb_submitted" size="55" readonly><br>   
+            </div>
+            <form name="finance_reimb_record_action" id="finance_reimb_record_action">
+                <div id="fin_mgr_actions">
+                    <h3>Finance Manager Action</h3>
+                    <!-- <h4>Select Reimbursement Status Code</h4> -->
+                    <label for="lbl_reimb_status_code">Select Reimbursement Status Code: </label>
+                         <select name="reimb_status_code" id="reimb_status_code" onchange="startFinMgrAction(this)">
+                            <option value="default">Select Status Code</option>
+                            <option value="approved">APPROVED</option>
+                            <option value="denied">DENIED</option>
+                         </select>  
+                         <div id="finance_reveiw_deny_reason_div">                 
+                            <br><label for="finance_reveiw_deny_reason">Reason: </label>
+                            <textarea rows="3" cols="50" name="finance_reveiw_deny_reason"
+                            id="finance_reveiw_deny_reason" minlength="10" maxlength="255" required></textarea>
+                         </div>
+                         <div id="lbl_action_btn" >
+                            <label for="lbl_action_btn" ><strong>Press to send: </strong></label>
+                            <button class="btn btn-primary mt-3" id="btn_submit_fm_action" >Submit</button><br>   
+                        </div>
+                </div>
+                <div>
+                    <br><button class="btn btn-primary mt-3" id="btn_clear_fm_action">Clear</button><br>
+                </div>
+            </form>
+        </form>
+        
+
+        <br>
+
+        <div id="div_all_recs">
+            <section id="all_reimb_recs">
+                <table>
+                    <thead>
+                        <tr>
+                            <!--<th>Select</th>-->  
+                            <th>Reimb Id</th>
+                            <th>Author</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Role</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Receipt</th>
+                            <th>Submitted</th>
+
+                            <th>Status</th>
+                            <th>Resolver</th>
+                            <th>Resolver Message</th>
+                            <th>Resolved</th>
+                        </tr>
+                    </thead>
+                    
+                    
+                    <tbody id="tbody_all_recs">
+                        
+                    </tbody>
+                    
+                </table>
+            </section>
+        </div>
+
+        <div>
+            <label for="lbl_action_status" id="lbl_action_status"><strong>Status / Messages: </strong></label>
+            <input type="input" name="action_status" id="action_status" readonly size="50">            
+        </div>
+
+       <!-- include JavaScript file -->
+       <script src="js/finance.js"></script>
+    </body>
+</html>

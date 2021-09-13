@@ -1,0 +1,55 @@
+body{
+    background-color:powderblue;
+    font-weight: bold;
+    max-width: 600px;
+    margin: auto;  
+    color: black;        
+    border-width: medium 5px thick 5px;
+    border-style: solid; 
+    padding: 25px 25px 25px 25px;
+    display: block;
+}
+h1 {
+    text-align: center;
+    color: black;
+}
+h2 {
+    text-align: center;
+    color:  blue;
+}
+
+h3 {
+    text-align: center;
+    color:  blue;
+}
+
+p {
+    text-align: center;
+    color: black;    
+}
+
+div {
+    text-align: center;
+    color: black;    
+}
+
+label{
+    display: block;
+    margin-top:  1rem;
+}
+
+
+
+div.container {
+    max-width: 500px;
+    border-width: medium 5px thick 5px;
+    margin: auto;
+    border-style: solid;
+    padding: 25px 25px 25px 25px;
+    display: block;
+    background-color:lightblue;
+    text-align: center;
+    align-self: center;
+
+}
+

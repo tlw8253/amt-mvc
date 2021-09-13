@@ -1,0 +1,122 @@
+
+h1 {
+    text-align: center;
+    color: black;
+}
+h2,h3 {
+    text-align: center;
+    color:  blue;
+}
+
+p {
+    text-align: center;
+    color: black;    
+}
+
+div {
+    text-align: center;
+    color: black;        
+}
+
+label{
+    display: inline-block;    
+}
+
+input[type='submit'],
+label{
+    margin-top:  1rem;
+}
+
+table, th, td {
+    border: 1px solid black;
+  }
+
+body{
+    background-color:powderblue;
+    font-weight: bold;
+    max-width: 1000px;
+    margin: auto;  
+    color: black;        
+    border-width: medium 5px thick 5px;
+    border-style: solid; 
+    padding: 25px 25px 25px 25px;
+    display: block;
+}
+
+#select_item{
+    background-color: lightblue;
+    color: black;        
+    border-width: medium 5px thick 5px;
+    border-style: solid; 
+    padding: 25px 25px 25px 7050pxpx;
+    display: block;
+}
+
+#create_request{
+    background-color: lightblue;
+    color: black;        
+    border-width: medium 5px thick 5px;
+    border-style: solid; 
+    padding: 25px 25px 25px 25px;
+    display: block;
+}
+
+#select_div{
+    left: 550px;
+    align-self: center;
+    text-align: center;
+    align-content: center;
+}
+
+  font.asterisk {
+    color: red;
+   
+  }
+  
+  #select_for_search_req{
+    background-color: lightblue;
+    color: black;        
+    border-width: medium 5px thick 5px;
+    border-style: solid; 
+    padding: 25px 25px 25px 25px;
+    display: block;
+}
+
+
+
+#review_reimb_record, #single_search_results_area{
+    background-color: lightblue;
+    color: black;        
+    border-width: medium 5px thick 5px;
+    border-style: solid; 
+    padding: 25px 25px 25px 25px;
+    display: block;
+}
+
+#finance_reimb_record_action{
+    background-color: lightblue;
+    color: black;        
+    border-width: medium 5px thick 5px;
+    border-style: solid; 
+    padding: 25px 25px 25px 25px;
+    display: block;
+}
+
+#logout_link, #right_links {
+    text-align: right;
+}
+
+#div_all_recs {
+    height: 10em;
+    overflow: auto;
+    white-space: nowrap;
+  }
+
+  .thumb {
+    height: 75px;
+    border: 1px solid #000;
+    margin: 10px 5px 0 0;
+  }
+
+
+  

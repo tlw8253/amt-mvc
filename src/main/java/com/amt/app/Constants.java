@@ -39,8 +39,10 @@ public interface Constants {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// program config constants
 	String csPackagesToScan = "com.amt.model";
-	String csCrossOriginHttp = "http://localhost:4201";
+	//String csCrossOriginHttp = "http://localhost:4201";
 	//String csCrossOriginHttp = "http://localhost:8088";
+	String csCrossOriginHttp = "*";
+	//@CrossOrigin(originPatterns = "*", allowCredentials = "true")
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// End Points

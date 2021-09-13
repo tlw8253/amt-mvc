@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- All employees in the company can login and submit requests for reimbursement and view their past tickets and pending requests-->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>WWMS Employee Requests</title>
+        <!-- 
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+        -->
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+    
+     <!-- Employee Reimbursement Page -->
+    <body onload="onPageLoad()">
+        <p id="logout_link">
+            <a href="javascript:logout()" >Logout</a>
+        </p>
+        <p id="right_links">
+            <a href="javascript:gotoFinance()">Back to Finance</a>
+            <label for="spaces">          </label>
+            <a href="javascript:logout()" >Logout</a>
+        </p>
+
+        <h1>Wally World Movie Studios</h1>
+        <h2>Expense Reimbursement System</h2>
+        <h3>Employee Requests</h3> 
+
+        <div>
+            <label for="this_username"><strong>Username: </strong></label>
+            <input type="input" name="username" id="username" readonly>
+            <label for="this_userrole"><strong>Role: </strong></label>
+            <input type="input" name="userrole" id="userrole" readonly>
+        </div>
+
+
+        <!-- there will be two sections that will appear based on selection.-->
+        <div>
+            <h3>Select from list to start an action:</h3>
+            <select id="start_action" onchange="startAction(this)">
+                <option value="default">Select an item</option>
+                <option value="view">View Previous Request</option>
+                <option value="create">Create New Request</option>
+            </select>
+        </div>
+ 
+        <br>           
+        <div name="select_div" id="select_div" style="align-self: center;">
+            <div class="select_item_div" style="align-self: center;">
+                <form name="select_item" id="select_item" style="display:none" method="GET" style="align-self: center;">
+                    <div>
+                        <h3>Search for Reinbursement Requests</h3>
+                        <!-- name field must match to prevent both radio buttons from being marked-->
+                        <input type="radio" id="get_all_records" name="get_record_type" value="ALL">
+                        <label for="get_all_records">Select to retrieve all reimbursement requests.</label><br>
+
+                        <input type="radio" id="get_pending_records" name="get_record_type" value="ALL PENDING">
+                        <label for="get_pending_records">Select to retrieve all pending reimbursement requests.</label>
+
+                        <br>                    
+                        <b><p>Or Search by Reinbursement Number</p></b>
+                        <label for="get_reimb_number">Enter Reinbursement Number: </label>
+                        <input type="text" name="get_reimb_number" id="get_reimb_number" size="5">
+                    </div>
+                    <div>
+                        <br><button class="btn btn-primary mt-3" id="btn_search_req">Search</button>
+                        <button class="btn btn-primary mt-3" id="btn_clear_1">Clear</button><br><br>
+                    </div>
+                </form>
+            </div>
+        
+
+
+            <div id="single_search_results_area">
+
+                <h3>Reimbursement Record for Review</h3>
+                <div>
+                    <label for="review_rec_id">Id: </label>
+                    <input type="text" name="review_rec_id" id="review_rec_id" size="3" readonly>
+                    <label for="review_rec_id">Status: </label>
+                    <input type="text" name="review_reimb_status" id="review_reimb_status" size="8" readonly>
+                    <label for="review_reimb_amount">Type: </label>
+                    <input type="text" name="review_reimb_type" id="review_reimb_type" size="8" readonly>
+                    <label for="review_reimb_amount">Amount: </label>
+                    <input type="text" name="review_reimb_amount" id="review_reimb_amount" size="5" readonly><br>                     
+                    <label for="review_reimb_receipt">Receipt: </label>
+                    <input type="text" name="review_reimb_receipt" id="review_reimb_receipt" size="15" readonly><br><br> 
+                    <label for="reveiw_reimb_description">Description:</label>
+                    <textarea rows="3" cols="50" name="review_reimb_description"
+                        id="review_reimb_description" minlength="10" maxlength="255" readonly></textarea>
+                    <br><label for="review_reimb_submitted_ts">Submitted: </label>
+                    <input type="text" name="review_reimb_submitted_ts" id="review_reimb_submitted_ts" size="55" readonly><br><br>  
+
+                    <label for="review_reimb_resolved_by_un">Resolved By: </label>
+                    <input type="text" name="review_reimb_resolved_by_un" id="review_reimb_resolved_by_un" size="5" readonly>
+                    <label for="review_reimb_resolved_by_role">Role: </label>
+                    <input type="text" name="review_reimb_resolved_by_role" id="review_reimb_resolved_by_role" size="10" readonly>
+                    <br><label for="review_reimb_resolved_msg">Resolver Message: </label>
+                    <input type="text" name="review_reimb_resolved_msg" id="review_reimb_resolved_msg" size="55" readonly>  
+
+                    <br><label for="review_reimb_resolved_ts">Resolved: </label>
+                    <input type="text" name="review_reimb_resolved_ts" id="review_reimb_resolved_ts" size="55" readonly><br>   
+
+                </div>
+                <div>
+                    <br><button class="btn btn-primary mt-3" id="btn_clear_single_search_results_area">Clear</button><br>
+                </div>
+ 
+
+
+            </div>
+
+            <!-- ************************************************************************************************************************** -->
+
+
+            <br>
+            <div id="div_all_recs">
+                <section id="all_reimb_recs">
+                    <table>
+                        <thead>
+                            <tr>
+                                <!--<th>Select</th>-->  
+                                <th>Reimb Id</th>
+                                <th>Author</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Role</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Receipt</th>
+                                <th>Submitted</th>
+    
+                                <th>Status</th>
+                                <th>Resolver</th>
+                                <th>Resolver Message</th>
+                                <th>Resolved</th>
+                            </tr>
+                        </thead>
+                        
+                        
+                        <tbody id="tbody_all_recs">
+                            
+                        </tbody>
+                        
+                    </table>
+                </section>
+            </div>
+    
+
+
+
+            <!-- ************************************************************************************************************************** -->
+
+            <form name="create_request" id="create_request" style="display:none" onsubmit="new_reinbursement_request(this)" method="POST">
+                <div name="select_request_type" id="select_request_type" style="display:none">                    
+                    <h3>Select a Request Type</h3>
+                    <select name="reimb_type" id="reimb_type">
+                        <option value="default">Select Request Type</option>
+                        <option value="lodging">LODGING</option>
+                        <option value="travel">TRAVEL</option>
+                        <option value="food">FOOD</option>
+                        <option value="other">OTHER</option>
+                    </select>                    
+                </div>
+
+                <div>
+                    <div>
+
+                        <h3>Reinbursement Request</h3>
+                        <label for="reimb_amount">Enter Reinbursement Amount: </label>
+                        <input type="text" name="reimb_amount" id="reimb_amount" required> <br>
+                        <label for="reimb_description">Enter Reimbursment Description:</label> <br>
+                        <textarea rows="5" cols="75" name="reimb_description"
+                                        id="reimb_description" minlength="10" maxlength="255" required></textarea><br>       
+                        <label for="reimb_receipt">Upload Reinbursement Receipt: </label>
+                        <input type="file" name="reimb_receipt[]" id="reimb_receipt" accept="accept=image/png, image/jpeg, image/jpg, .doc,.docx," required/> <br>
+                        <output id="receipt_list"></output>
+
+
+                    </div>
+                    <div>
+                        <br><label for="lbl_action_btn" id="lbl_action_btn"><strong>Press to send: </strong></label>
+                        <button class="btn btn-primary mt-3" id="btn_create">Create</button>
+                        <button class="btn btn-primary mt-3" id="btn_clear_2">Clear</button><br>
+                     </div>
+                </div>
+                
+            </form>
+            <div>                                                                
+                <label for="lbl_action_status" id="lbl_action_status"><strong>Status: </strong></label>
+                <input type="input" name="action_status" id="action_status" readonly size="50">
+            </div>
+    
+
+
+
+
+        </div>
+
+
+ 
+        <script src="js/reimbursement.js"></script>
+    </body>
+</html>
